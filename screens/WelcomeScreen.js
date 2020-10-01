@@ -17,7 +17,6 @@ export default class WelcomeScreen extends React.Component {
           contact:'',
           confirmPassword:'',
           isModalVisible:'false',
-          selectedValue:"teacher",
         }
       }
     
@@ -32,7 +31,7 @@ export default class WelcomeScreen extends React.Component {
              last_name : this.state.lastName,
              contact   : this.state.contact,
              email_id  : this.state.emailId,
-             user_type : this.state.selectedValue,
+             user_type : "teacher",
            })
            return  Alert.alert(
                 'User Added Successfully',

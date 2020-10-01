@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { DrawerItems } from 'react-navigation-drawer';
 import { Icon } from "react-native-elements";
+import firebase from "firebase";
 
 export default class SideBarMenu extends React.Component {
     render(){
@@ -14,15 +15,15 @@ export default class SideBarMenu extends React.Component {
                   <TouchableOpacity
                     onPress={()=>{
                         firebase.auth().signOut(); 
-                        // this.props.navigation.navigate("Welcome")
+                        this.props.navigation.navigate("Welcome")
                     }}
                   >
-                    <Icon 
+                    {/* <Icon
                       name="Log out"
                       type="antdesign"
                       size={20}
                       iconStyle={{paddingLeft:10}}
-                    />
+                    /> */}
                     <Text style={styles.logOutText}>Log out</Text>
                   </TouchableOpacity>
                 </View>

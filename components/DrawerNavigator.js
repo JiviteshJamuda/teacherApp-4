@@ -12,6 +12,6 @@ export const DrawerNavigator = createDrawerNavigator(
         CheckAssignments : {screen : CheckAssignment},
         PostAssignments : {screen : PostAssignment},
     },
-    {initialRouteName : "PostAssignments"},
     {contentComponent : SideBarMenu},
+    {initialRouteName : "PostAssignments"},
 )
