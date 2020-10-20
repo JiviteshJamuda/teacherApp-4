@@ -25,6 +25,7 @@ export default class SideBarMenu extends React.Component {
                       iconStyle={{paddingLeft:10}}
                     /> */}
                     <Text style={styles.logOutText}>Log out</Text>
+                    <Icon name="sign-out" type="font-awesome"/>
                   </TouchableOpacity>
                 </View>
                 

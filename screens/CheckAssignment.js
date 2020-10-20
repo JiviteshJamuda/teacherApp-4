@@ -29,7 +29,7 @@ export default class CheckAssignment extends React.Component {
     }
 
     getAllAssignments = ()=>{
-        this.requestRef = db.collection("all_assignments")
+        this.requestRef = db.collection("all_assignments").where("teacher_email_id", "==", this.state.emailId)
         .onSnapshot(snapshot=>{
             var allAssignments = snapshot.docs.map(doc=> doc.data())
             this.setState({
@@ -37,16 +37,6 @@ export default class CheckAssignment extends React.Component {
             })
         })
     }
-
-    // getRequestedBooksList =()=>{
-    //     this.requestRef = db.collection("requested_books")
-    //     .onSnapshot((snapshot)=>{
-    //       var requestedBooksList = snapshot.docs.map((doc) => doc.data())
-    //       this.setState({
-    //         requestedBooksList : requestedBooksList
-    //       });
-    //     })
-    //   }
 
     keyExtractor = (item, index) => index.toString()
 
@@ -57,41 +47,19 @@ export default class CheckAssignment extends React.Component {
             title={item.question}
             titleStyle={{ color: 'black', fontWeight: 'bold' }}
             subtitle={item.subject}
+            rightElement={
+                <TouchableOpacity style={styles.viewButton}  onPress={()=>{ this.props.navigation.navigate("ViewAssignmentDetails", {details : item}) }}>
+                    <Text style={styles.viewButtonText}>View</Text>
+                </TouchableOpacity>
+            }
             bottomDivider
           />
         )
     }
 
-    // renderItem = ( {item, i} ) =>{
-    //     return (
-    //       <ListItem
-    //         key={i}
-    //         title={item.book_name}
-    //         subtitle={item.reason_to_request}
-    //         titleStyle={{ color: 'black', fontWeight: 'bold' }}
-    //         leftElement={
-    //           <Image
-    //             style={{height:50, width:50,}}
-    //             source={{uri:item.image_link}}
-    //           />
-    //         }
-    //         rightElement={
-    //             <TouchableOpacity style={styles.button}
-    //               onPress ={()=>{
-    //                 this.props.navigation.navigate("RecieverDetails",{"details": item})
-    //               }}
-    //               >
-    //               <Text style={{color:'#ffff'}}>View</Text>
-    //             </TouchableOpacity>
-    //           }
-    //         bottomDivider
-    //       />
-    //     )
-    //   }
-
-    componentDidMount(){
-        this.getTeacherDetails();
-        this.getAllAssignments();
+    async componentDidMount(){
+        await this.getTeacherDetails();
+        await this.getAllAssignments();
     }
 
     componentWillUnmount(){
@@ -104,9 +72,9 @@ export default class CheckAssignment extends React.Component {
                 <Header
                     leftComponent={<Icon name="menu" onPress={()=>{this.props.navigation.toggleDrawer()}}/>}
                     placement="left"
-                    centerComponent={{text:"Check Assignments", style:{fontSize:15, fontWeight:"bold"}}}
+                    centerComponent={{text:"Check Assignments", style:{fontSize:25, fontWeight:"bold"}}}
+                    backgroundColor="green"
                 />
-                <Button title="press" onPress={()=>{console.log(this.state.allAssignments)}}/>
                 {
                     this.state.allAssignments.length === 0
                     ?(
@@ -127,3 +95,20 @@ export default class CheckAssignment extends React.Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    viewButton : {
+        borderWidth:2,
+        height:30,
+        width:60,
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius:5,
+        borderColor:"#c7ea46",
+    },
+    viewButtonText : {
+        fontWeight:"bold",
+        fontSize:15,
+        color:"#c7ea46"
+    }
+})

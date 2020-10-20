@@ -31,7 +31,6 @@ export default class WelcomeScreen extends React.Component {
              last_name : this.state.lastName,
              contact   : this.state.contact,
              email_id  : this.state.emailId,
-             user_type : "teacher",
            })
            return  Alert.alert(
                 'User Added Successfully',
@@ -167,6 +166,7 @@ export default class WelcomeScreen extends React.Component {
                 {this.showModal()}
                 <Header
                     centerComponent={{text:"Assignments", style:{fontSize:25, fontWeight:"bold",color:"white", alignItems:"center", justifyContent:"center"}}}
+                    backgroundColor="green"
                 />
                 <TextInput  style={styles.loginBox}
                     placeholder="email ID"

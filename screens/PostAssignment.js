@@ -3,7 +3,9 @@ import { Text, View, StyleSheet, TouchableOpacity, TextInput } from "react-nativ
 import { Header, Icon } from "react-native-elements";
 import firebase from "firebase";
 import db from "../config";
-import { Picker } from "@react-native-community/picker";
+import RNPickerSelect from "react-native-picker-select";
+import { ModalDatePicker } from "react-native-material-date-picker";
+
 
 export default class PostAssignment extends React.Component {
     constructor(){
@@ -16,11 +18,11 @@ export default class PostAssignment extends React.Component {
             emailId : firebase.auth().currentUser.email,
             docId : "",
         }
-        this.requestRef = null
+        this.requestRef = null;
     }
 
-    getTeacherDetails = async()=>{
-        await db.collection("users").where("email_id", "==", this.state.emailId)
+    getTeacherDetails = ()=>{
+        this.requestRef = db.collection("users").where("email_id", "==", this.state.emailId)
         .onSnapshot(snapshot=>{
             snapshot.forEach(doc=>{
                 this.setState({
@@ -32,20 +34,27 @@ export default class PostAssignment extends React.Component {
     }
 
     postQuestion = ()=>{
+        var assignmentId = this.createUniqueId();
         db.collection("all_assignments").add({
             "question" : this.state.question,
-            "teacher_name" : this.state.teacherName,
             "subject" : this.state.subject,
+            "teacher_name" : this.state.teacherName,
+            "teacher_email_id" : this.state.emailId,
+            "assignment_id" : assignmentId,
         })
+    }
+
+    createUniqueId = ()=>{
+        return Math.random().toString(36).substring(5)
     }
 
     componentDidMount(){
         this.getTeacherDetails();
     }
 
-    // componentWillUnmount(){
-    //     this.requestRef();
-    // }
+    componentWillUnmount(){
+        this.requestRef();
+    }
 
     render(){
         return(
@@ -53,46 +62,76 @@ export default class PostAssignment extends React.Component {
                 <Header
                     leftComponent={<Icon name="menu" onPress={()=>{this.props.navigation.toggleDrawer()}}/>}
                     placement="left"
-                    centerComponent={{text:"Post Assignments", style:{fontSize:15, fontWeight:"bold"}}}
+                    centerComponent={{text:"Post Assignments", style:{fontSize:25, fontWeight:"bold"}}}
+                    backgroundColor="green"
                 />
-                <TextInput
+                <TextInput style={styles.questionBox}
                     placeholder="type the question or paste a link from drive"
                     onChangeText={(text)=>{ this.setState({ question : text }) }}
                     value={this.state.question}
+                    maxLength={9999999999}
+                    multiline={true}
+
                 />
-                <TouchableOpacity>
-                    <Text onPress={()=>{ this.postQuestion(); }}>Post</Text>
-                </TouchableOpacity>
-                <Picker
-                    style={styles.picker} itemStyle={styles.pickerItem}
-                    selectedValue={this.state.subject}
-                    onValueChange={(itemValue) => this.setState({subject: itemValue})}
-                >
-                    <View style={styles.pickerView}>
-                        <Picker.Item label="Maths" value="maths" />
-                        <Picker.Item label="English" value="english" />
-                        <Picker.Item label="Science" value="science" />
-                        <Picker.Item label="Hindi" value="hindi" />
-                        <Picker.Item label="Geography" value="geography" />
-                        <Picker.Item label="History" value="history" />
-                    </View>
-                </Picker>
+                <View style={{flex:1, marginTop:20, alignItems:"center"}}>
+                    <RNPickerSelect
+                        onValueChange={(value) => this.setState({ subject : value })}
+                        items={[
+                            { label: 'Maths', value: 'maths' },
+                            { label: 'English', value: 'english' },
+                            { label: 'Science', value: 'science' },
+                        ]}
+                    />
+                    <Text>Selected Subject : {this.state.subject}</Text>
+                    {/* <View style={{flex: 1, alignSelf: 'stretch'}}>
+                        <ModalDatePicker
+                            button={<Text> Open </Text>}
+                            locale="en"
+                            onSelect={(date) => console.log(date)}
+                            isHideOnSelect={true}
+                            initialDate={new Date()}
+                        />             
+                    </View> */}
+                    <TouchableOpacity style={styles.button}  onPress={()=>{ this.postQuestion() }}>
+                        <Text style={styles.buttonText}>Post</Text>
+                    </TouchableOpacity>
+                </View>                
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    picker: {
-       width: 200,
-       backgroundColor: '#FFF0E0',
-       borderColor: 'black',
-       borderWidth: 1,
+    // picker: {
+    //    width: 200,
+    //    backgroundColor: '#FFF0E0',
+    //    borderColor: 'black',
+    //    borderWidth: 1,
+    // },
+    // pickerView:{
+    //   height:400,    
+    // },
+    // pickerItem: {
+    //   color: 'red'
+    // },
+    questionBox:{
+        borderWidth:2,
+        margin:10,
+        height:120
     },
-    pickerView:{
-      height:400,    
+    button:{
+        borderWidth:2,
+        borderColor:"#c7ea46",
+        borderRadius:10,
+        height:45,
+        width:100,
+        alignItems:"center",
+        justifyContent:"center",
+        marginTop:50,
     },
-    pickerItem: {
-      color: 'red'
-    },
+    buttonText:{
+        fontSize:19,
+        fontWeight:"bold",
+        color:"#c7ea46"
+    }
 })

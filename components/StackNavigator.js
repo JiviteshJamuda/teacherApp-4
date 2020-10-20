@@ -1,21 +1,25 @@
 import React from 'react';
-// import { createStackNavigator } from 'react-navigation-stack';
+import { createStackNavigator } from 'react-navigation-stack';
 
-// export const AppStackNavigator = createStackNavigator({
-//   BookDonateList : {
-//     screen : BookDonateScreen,
-//     navigationOptions:{
-//       headerShown : false
-//     }
-//   },
-//   RecieverDetails : {
-//     screen : RecieverDetailsScreen,
-//     navigationOptions:{
-//       headerShown : false
-//     }
-//   }
-// },
-//   {
-//     initialRouteName: 'BookDonateList'
-//   }
-// );
+import CheckAssignment from "../screens/CheckAssignment";
+import ViewAssignmentDetails from "../screens/ViewAssignmentDetails";
+import { DrawerNavigator } from "./DrawerNavigator";
+
+export const StackNavigator = createStackNavigator({
+  Home : {
+    screen : DrawerNavigator,
+    navigationOptions:{
+      headerShown : false
+    }
+  },
+  ViewAssignmentDetails : {
+    screen : ViewAssignmentDetails,
+    navigationOptions:{
+      headerShown : false
+    }
+  }
+},
+  {
+    initialRouteName: 'Home'
+  },
+);
