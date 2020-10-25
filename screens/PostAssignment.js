@@ -60,9 +60,9 @@ export default class PostAssignment extends React.Component {
         return(
             <View style={{flex:1}}>
                 <Header
-                    leftComponent={<Icon name="menu" onPress={()=>{this.props.navigation.toggleDrawer()}}/>}
+                    leftComponent={<Icon name="menu" onPress={()=>{this.props.navigation.toggleDrawer()}} color="yellow"/>}
                     placement="left"
-                    centerComponent={{text:"Post Assignments", style:{fontSize:25, fontWeight:"bold"}}}
+                    centerComponent={{text:"Post Assignments", style:{fontSize:25, fontWeight:"bold", color:"white"}}}
                     backgroundColor="green"
                 />
                 <TextInput style={styles.questionBox}

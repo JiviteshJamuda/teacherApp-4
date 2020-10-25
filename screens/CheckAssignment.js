@@ -70,9 +70,9 @@ export default class CheckAssignment extends React.Component {
         return(
             <View>
                 <Header
-                    leftComponent={<Icon name="menu" onPress={()=>{this.props.navigation.toggleDrawer()}}/>}
+                    leftComponent={<Icon name="menu" onPress={()=>{this.props.navigation.toggleDrawer()}} color="yellow"/>}
                     placement="left"
-                    centerComponent={{text:"Check Assignments", style:{fontSize:25, fontWeight:"bold"}}}
+                    centerComponent={{text:"Check Assignments", style:{fontSize:25, fontWeight:"bold", color:"white"}}}
                     backgroundColor="green"
                 />
                 {
