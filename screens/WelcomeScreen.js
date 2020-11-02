@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Modal, ScrollView, KeyboardAvoidingView, TextInput, Alert, Button } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Modal, ScrollView, KeyboardAvoidingView, TextInput, Alert, Button, ToastAndroid } from "react-native";
 import { Picker } from "@react-native-community/picker";
 import db from "../config";
 import firebase from "firebase";
@@ -52,7 +52,14 @@ export default class WelcomeScreen extends React.Component {
     userLogin = (emailId, password)=>{
        firebase.auth().signInWithEmailAndPassword(emailId, password)
        .then(()=>{
-         this.props.navigation.navigate('Drawer')
+         this.props.navigation.navigate('Drawer');
+          ToastAndroid.showWithGravityAndOffset(
+            "Login Successful",
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            0,
+            100
+          )
        })
        .catch((error)=> {
          var errorCode = error.code;

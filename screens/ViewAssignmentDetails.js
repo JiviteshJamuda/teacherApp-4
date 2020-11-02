@@ -11,13 +11,15 @@ export default class ViewAssignmentDetails extends React.Component {
             docId : "",
             question : this.props.navigation.getParam("details")["question"],
             subject : this.props.navigation.getParam("details")["subject"],
+            assignmentId : this.props.navigation.getParam("details")["assignment_id"],
+            totalMarks : this.props.navigation.getParam("details")["total_marks"],
             allAnswers : [],
         }
         this.requestRef = null;
     }   // this.props.navigation.getParam("details")["request_id"],
 
     getAllAnswers = ()=>{
-        this.requestRef = db.collection("all_answers")
+        this.requestRef = db.collection("all_answers").where("assignment_id", "==", this.state.assignmentId)
         .onSnapshot(snapshot=>{
             var allAnswers = snapshot.docs.map(doc=> doc.data())
             this.setState({
@@ -43,7 +45,7 @@ export default class ViewAssignmentDetails extends React.Component {
             rightElement={
                 <TouchableOpacity style={styles.viewButton}  
                     onPress={()=>{ 
-                        this.props.navigation.navigate("ViewAnswer", {hand : item, id : this.state.docId}) 
+                        this.props.navigation.navigate("ViewAnswer", {hand : item, id : this.state.docId, totalMarks : this.state.totalMarks}) 
                     }}
                 >
                     <Text style={styles.viewButtonText}>view</Text>
@@ -55,7 +57,7 @@ export default class ViewAssignmentDetails extends React.Component {
     }
 
     async componentDidMount(){
-        this.getAllAnswers();
+        await this.getAllAnswers();
     }
 
     componentWillUnmount(){
@@ -77,15 +79,27 @@ export default class ViewAssignmentDetails extends React.Component {
                     <Card>
                         <Text style={styles.questionText}>{this.state.question}</Text>
                         <Text>{this.state.subject}</Text>
+                        <Text>Total Marks : {this.state.totalMarks}</Text>
                     </Card>
                 </View>
-                <Card title="Students who have completed the assignment">
-                    <FlatList
-                        data={this.state.allAnswers}
-                        renderItem={this.renderItem}
-                        keyExtractor={this.keyExtractor}
-                    />
-                </Card>
+                {
+                    this.state.allAnswers.length === 0 ?
+                    (
+                        <Card>
+                            <Text style={{fontWeight:"bold"}}>Nobody has completed the assignment</Text>
+                        </Card>
+                    ):
+                    (
+                        <Card title="List of students who have completed the assignment">
+                            <FlatList
+                                data={this.state.allAnswers}
+                                renderItem={this.renderItem}
+                                keyExtractor={this.keyExtractor}
+                            />
+                        </Card>
+                    )
+                }
+                
             </ScrollView>
         )
     }

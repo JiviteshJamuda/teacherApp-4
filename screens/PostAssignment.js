@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, TouchableOpacity, TextInput } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid } from "react-native";
 import { Header, Icon } from "react-native-elements";
 import firebase from "firebase";
 import db from "../config";
@@ -12,11 +12,12 @@ export default class PostAssignment extends React.Component {
         super();
         this.state={
             question : "",
-            subject : "maths",
+            subject : null,
             dueDate : "",
             teacherName : "",
             emailId : firebase.auth().currentUser.email,
             docId : "",
+            totalMarks : "10",
         }
         this.requestRef = null;
     }
@@ -34,14 +35,43 @@ export default class PostAssignment extends React.Component {
     }
 
     postQuestion = ()=>{
-        var assignmentId = this.createUniqueId();
-        db.collection("all_assignments").add({
-            "question" : this.state.question,
-            "subject" : this.state.subject,
-            "teacher_name" : this.state.teacherName,
-            "teacher_email_id" : this.state.emailId,
-            "assignment_id" : assignmentId,
-        })
+        var question = this.state.question.trim()
+        if(this.state.question === "" || this.state.question === " "){
+            ToastAndroid.showWithGravityAndOffset(
+                "Please enter the question first",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                0,
+                100
+            )
+        } else if(this.state.subject === null){
+            ToastAndroid.showWithGravityAndOffset(
+                "Please select the subject first",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                0,
+                100
+            )
+        } else {
+            var assignmentId = this.createUniqueId();
+            db.collection("all_assignments").add({
+                "question" : question,
+                "subject" : this.state.subject,
+                "teacher_name" : this.state.teacherName,
+                "teacher_email_id" : this.state.emailId,
+                "assignment_id" : assignmentId,
+                "total_marks" : this.state.totalMarks,
+            })
+            ToastAndroid.showWithGravityAndOffset(
+                "Question Posted Successfully!",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                0,
+                100
+            )
+        }
+        
+        
     }
 
     createUniqueId = ()=>{
@@ -74,6 +104,7 @@ export default class PostAssignment extends React.Component {
 
                 />
                 <View style={{flex:1, marginTop:20, alignItems:"center"}}>
+                    <Text>Selected Subject : {this.state.subject}</Text>
                     <RNPickerSelect
                         onValueChange={(value) => this.setState({ subject : value })}
                         items={[
@@ -82,7 +113,6 @@ export default class PostAssignment extends React.Component {
                             { label: 'Science', value: 'science' },
                         ]}
                     />
-                    <Text>Selected Subject : {this.state.subject}</Text>
                     {/* <View style={{flex: 1, alignSelf: 'stretch'}}>
                         <ModalDatePicker
                             button={<Text> Open </Text>}
@@ -92,6 +122,14 @@ export default class PostAssignment extends React.Component {
                             initialDate={new Date()}
                         />             
                     </View> */}
+                    <Text>Total marks : </Text>
+                    <TextInput style={styles.markBox}
+                        placeholder="enter total marks"
+                        value={this.state.totalMarks}
+                        onChangeText={(text)=>{ this.setState({ totalMarks : text }) }}
+                        keyboardType="numeric"
+                        maxLength={4}
+                    />
                     <TouchableOpacity style={styles.button}  onPress={()=>{ this.postQuestion() }}>
                         <Text style={styles.buttonText}>Post</Text>
                     </TouchableOpacity>
@@ -102,22 +140,11 @@ export default class PostAssignment extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    // picker: {
-    //    width: 200,
-    //    backgroundColor: '#FFF0E0',
-    //    borderColor: 'black',
-    //    borderWidth: 1,
-    // },
-    // pickerView:{
-    //   height:400,    
-    // },
-    // pickerItem: {
-    //   color: 'red'
-    // },
     questionBox:{
         borderWidth:2,
         margin:10,
-        height:120
+        height:120,
+        borderRadius:10,
     },
     button:{
         borderWidth:2,
@@ -127,11 +154,16 @@ const styles = StyleSheet.create({
         width:100,
         alignItems:"center",
         justifyContent:"center",
-        marginTop:50,
+        marginTop:30,
     },
     buttonText:{
         fontSize:19,
         fontWeight:"bold",
         color:"#c7ea46"
+    },
+    markBox:{
+        borderWidth:1,
+        borderRadius:5,
+        marginTop:10,
     }
 })
