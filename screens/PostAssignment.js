@@ -4,6 +4,7 @@ import { Header, Icon } from "react-native-elements";
 import firebase from "firebase";
 import db from "../config";
 import RNPickerSelect from "react-native-picker-select";
+import MyHeader from "../components/MyHeader";
 import { ModalDatePicker } from "react-native-material-date-picker";
 
 
@@ -89,12 +90,13 @@ export default class PostAssignment extends React.Component {
     render(){
         return(
             <View style={{flex:1}}>
-                <Header
+                {/* <Header
                     leftComponent={<Icon name="menu" onPress={()=>{this.props.navigation.toggleDrawer()}} color="yellow"/>}
                     placement="left"
                     centerComponent={{text:"Post Assignments", style:{fontSize:25, fontWeight:"bold", color:"white"}}}
                     backgroundColor="green"
-                />
+                /> */}
+                <MyHeader title="Post Assignments" navigation={this.props.navigation} />
                 <TextInput style={styles.questionBox}
                     placeholder="type the question or paste a link from drive"
                     onChangeText={(text)=>{ this.setState({ question : text }) }}

@@ -5,6 +5,7 @@ import CheckAssignment from "../screens/CheckAssignment";
 import ViewAssignmentDetails from "../screens/ViewAssignmentDetails";
 import { DrawerNavigator } from "./DrawerNavigator";
 import ViewAnswer from "../screens/ViewAnswer";
+import NotificationDetails from "../screens/NotificationDetails"
 
 export const StackNavigator = createStackNavigator({
   Home : {
@@ -21,6 +22,12 @@ export const StackNavigator = createStackNavigator({
   },
   ViewAnswer : {
     screen : ViewAnswer,
+    navigationOptions :{
+      headerShown : false
+    }
+  },
+  NotificationDetails : {
+    screen : NotificationDetails,
     navigationOptions :{
       headerShown : false
     }

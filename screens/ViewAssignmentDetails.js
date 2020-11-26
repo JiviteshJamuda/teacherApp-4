@@ -45,7 +45,7 @@ export default class ViewAssignmentDetails extends React.Component {
             rightElement={
                 <TouchableOpacity style={styles.viewButton}  
                     onPress={()=>{ 
-                        this.props.navigation.navigate("ViewAnswer", {hand : item, id : this.state.docId, totalMarks : this.state.totalMarks}) 
+                        this.props.navigation.navigate("ViewAnswer", {details : item, id : this.state.docId, totalMarks : this.state.totalMarks}) 
                     }}
                 >
                     <Text style={styles.viewButtonText}>view</Text>

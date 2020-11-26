@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, View, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
 import { Header, Icon, ListItem } from "react-native-elements";
+import MyHeader from "../components/MyHeader";
 import firebase from "firebase";
 import db from "../config";
 
@@ -69,16 +70,17 @@ export default class CheckAssignment extends React.Component {
     render(){
         return(
             <View>
-                <Header
+                {/* <Header
                     leftComponent={<Icon name="menu" onPress={()=>{this.props.navigation.toggleDrawer()}} color="yellow"/>}
                     placement="left"
                     centerComponent={{text:"Check Assignments", style:{fontSize:25, fontWeight:"bold", color:"white"}}}
                     backgroundColor="green"
-                />
+                /> */}
+                <MyHeader title="Check Assignments" navigation={this.props.navigation} />
                 {
                     this.state.allAssignments.length === 0
                     ?(
-                        <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:20}}>
+                        <View style={{flex:1, justifyContent:'center', alignItems:'center', margin:50}}>
                             <Text style={{fontSize:25, fontWeight:"bold"}}>You have not posted any assignments</Text>
                         </View> 
                     )
