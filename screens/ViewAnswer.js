@@ -19,6 +19,7 @@ export default class ViewAnswer extends React.Component{
             recievedMarksOfStudent : "",
             totalMarksOfStudent : "",
             studentDocId : "",
+            question : this.props.navigation.getParam("question"),
         }
         this.requestRef = null;
     }
@@ -44,6 +45,19 @@ export default class ViewAnswer extends React.Component{
             "notification_status" : "unread",
             "message" : this.state.senderName + " has marked your answer",
             "feedback" : this.state.feedback,
+            "question" : this.state.question,
+        })
+    }
+
+    sendNotificationToResubmit = ()=>{
+        var notificationId = this.createUniqueId()
+        db.collection("all_notifications").add({
+            "notification_id" : notificationId,
+            "targeted_user_id" : this.state.studentEmailId,
+            "notification_status" : "unread",
+            "message" : this.state.senderName + " has asked you to resubmit your answer for the assignment",
+            "feedback" : this.state.feedback,
+            "question" : this.state.question,
         })
     }
 
@@ -76,7 +90,6 @@ export default class ViewAnswer extends React.Component{
             .update({
                 "feedback" : this.state.feedback,
                 "marks" : this.state.givenMarks,
-                "marked" : true,
             })
             ToastAndroid.showWithGravityAndOffset(
                 "Marks and Feedback Submitted successfully",
@@ -101,7 +114,6 @@ export default class ViewAnswer extends React.Component{
             db.collection("all_answers").doc(this.state.docId)
             .update({
                 "feedback" : this.state.feedback,
-                "marked" : false,
             })
             ToastAndroid.showWithGravityAndOffset(
                 "Feedback Submitted successfully",
@@ -192,7 +204,7 @@ export default class ViewAnswer extends React.Component{
                         
                         <TouchableOpacity style={styles.button2} onPress={()=>{
                             this.askToResubmit();
-                            this.sendNotification();
+                            this.sendNotificationToResubmit();
                         }}>
                             <Text style={styles.buttonText2}>Ask to resubmit</Text>
                         </TouchableOpacity>
